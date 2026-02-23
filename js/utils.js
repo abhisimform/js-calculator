@@ -4,7 +4,8 @@ export function safeEval(expression) {
       throw new Error("division by zero");
     }
 
-    return result;
+    return eval(expression);
+
   } catch (err) {
     throw new Error("expression invalid ");
   }

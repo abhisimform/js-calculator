@@ -10,6 +10,18 @@ themeSelector.addEventListener('change', (e) => {
   }
 });
 
+document
+  .querySelector('select[name="calc-mode"]')
+  .addEventListener("change", function () {
+    const advanced = document.querySelector(".advanced");
+
+    if (this.value === "trigonometry") {
+      advanced.classList.remove("d-none");
+    } else {
+      advanced.classList.add("d-none");
+    }
+  });
+
 const input = document.getElementById("calc-input");
 const calculator = new Calculator(input);
 
