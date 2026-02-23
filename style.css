@@ -1,0 +1,132 @@
+:root {
+  --bg-color: #e5e5e5;
+  --calculator-bg: #fff;
+  --display-bg: linear-gradient(to right, #f3f3f3, #e9e9e9);
+  --btn1-bg: #f3f3f3;
+  --btn1-hover: #edecec;
+  --btn2-bg: #ffffff;
+  --btn2-hover: #f2f2f2;
+  --equal-btn-bg: #2d2d2d;
+  --equal-btn-hover: #000000;
+  --text-color: #000;
+  --mode-bg: #f7f7f7;
+  --border-color: #ddd;
+}
+
+.dark {
+  --bg-color: #383838;
+  --calculator-bg: #1e1e1e;
+  --display-bg: linear-gradient(to right, #2a2a2a, #1f1f1f);
+  --btn1-bg: #121212;
+  --btn1-hover: #2b2b2b;
+  --btn2-bg: #2b2b2b;
+  --btn2-hover: rgb(64, 64, 64);
+  --equal-btn-bg: #ff9500;
+  --equal-btn-hover: #e08900;
+  --text-color: #f5f5f5;
+  --mode-bg: #1a1a1a;
+  --border-color: #333;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg-color);
+  color: var(--text-color);
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.calculator_display {
+  padding: 10px;
+  background: var(--display-bg);
+}
+
+.display-input {
+  width: 100%;
+  height: 70px;
+  font-size: 2rem;
+  text-align: right;
+  border: none;
+  background: transparent;
+  padding: 0 10px;
+  outline: none;
+  color: var(--text-color);
+}
+
+.calculator {
+  width: 400px;
+  background: var(--calculator-bg);
+  border-radius: 6px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.calculator_mode {
+  display: flex;
+  gap: 8px;
+  padding: 8px 10px;
+  background: var(--mode-bg);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.calculator_mode select {
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  background: white;
+  border-radius: 3px;
+}
+
+.calculator_buttons {
+  padding: 8px;
+}
+
+.buttons_row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.btn {
+  flex: 0 0 calc(20% - 5px);
+  min-width: 60px;
+  min-height: 60px;
+  font-size: 1.3rem;
+  cursor: pointer;
+  border: 1px solid rgb(0, 0, 0, 0.1);
+  border-radius: 2px;
+  color: var(--text-color);
+  background: var(--btn1-bg);
+}
+
+.btn:hover {
+  background: var(--btn1-hover);
+}
+
+.btn-white {
+  background: var(--btn2-bg);
+}
+
+.btn-white:hover {
+  background: var(--btn2-hover);
+}
+
+.equal-btn {
+  background: var(--equal-btn-bg);
+  color: white;
+}
+
+.equal-btn:hover {
+  background: var(--equal-btn-hover);
+}
+
+.d-none {
+  display: none;
+}
