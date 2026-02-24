@@ -26,7 +26,6 @@ closeHistory.addEventListener("click", () => {
 
 clearHistory.addEventListener("click", () => {
   localStorage.removeItem("calcHistory");
-  calculator.history = [];
   calculator.renderHistory();
 });
 

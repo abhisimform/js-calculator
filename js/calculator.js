@@ -1,4 +1,5 @@
 import { safeEval } from "./utils.js";
+import historyClosure from "./historyClosure.js";
 
 export class Calculator {
   constructor(displayElement) {
@@ -6,43 +7,27 @@ export class Calculator {
     this.hasError = false;
     this.memory = 0;
 
-    this.history = [];
+    this.historyC = historyClosure();
+    console.log(this.historyC);
     this.historyList = document.getElementById("history-list");
 
     this.loadHistory();
   }
 
-  history(calculation) {
-    let history = JSON.parse(localStorage.getItem("calcHistory")) || [];
-    history.push(calculation);
-    localStorage.setItem("calcHistory", JSON.stringify(history));
-  }
-
   loadHistory() {
-    const stored = localStorage.getItem("calcHistory");
-    this.history = stored ? JSON.parse(stored) : [];
     this.renderHistory();
   }
 
   addToHistory(entry) {
-    this.history.unshift(entry);
-
-    if (this.history.length > 20) {
-      this.history.pop();
-    }
-
-    this.saveHistory();
+    this.historyC.add(entry);
     this.renderHistory();
   }
 
-  saveHistory() {
-    localStorage.setItem("calcHistory", JSON.stringify(this.history));
-  }
-
   renderHistory() {
+    const history = this.historyC.getAllHistory();
     this.historyList.innerHTML = "";
 
-    this.history.forEach(item => {
+    history.forEach(item => {
       const li = document.createElement("li");
       li.textContent = item;
 
@@ -56,52 +41,6 @@ export class Calculator {
 
       this.historyList.appendChild(li);
     });
-  }
-
-  add(value) {
-    const current = this.display.value;
-    const lastChar = current.slice(-1);
-    const operators = ["+", "-", "*", "/"];
-
-    if (this.hasError) {
-      this.display.value = value;
-      this.hasError = false;
-      return;
-    }
-
-    // stop start with invalid operators
-    if (current === "" && operators.includes(value)) {
-      if (value !== "-") return;
-    }
-
-    // if last input char is operator then replace it
-    if (operators.includes(lastChar) && operators.includes(value)) {
-      this.display.value = current.slice(0, -1) + value;
-      return;
-    }
-
-    // stop multiple "."
-    if (value === ".") {
-      const parts = current.split(/[\+\-\*\/]/);
-      const lastNumber = parts[parts.length - 1];
-      if (lastNumber.includes(".")) return;
-    }
-
-    this.display.value += value;
-  }
-
-  clear() {
-    this.display.value = "";
-    this.hasError = false;
-  }
-
-  backspace() {
-    if (this.hasError) {
-      this.display.value = "";
-      this.hasError = false;
-      return;
-    }
-    this.display.value = this.display.value.slice(0, -1);
   }
 
   calculate() {
@@ -128,12 +67,17 @@ export class Calculator {
       if (Number.isNaN(result)) {
         this.hasError = true;
         this.display.value = "Error";
-      } else {
-        this.display.value = result;
+        return;
       }
 
-      this.addToHistory(`${expression} = ${result}`);
+      const lastHistory = this.historyC.getAllHistory()[0] || "";
+      const lastResult = lastHistory.includes("=") ? lastHistory.split("=")[1].trim() : null;
 
+      if (lastResult === null || lastResult !== result.toString()) {
+        this.addToHistory(`${expression} = ${result}`);
+      }
+
+      // Update display
       this.display.value = result;
     } catch (err) {
       this.hasError = true;
@@ -166,4 +110,50 @@ export class Calculator {
     }
   }
 
+}
+
+Calculator.prototype.add = function (value) {
+  const current = this.display.value;
+  const lastChar = current.slice(-1);
+  const operators = ["+", "-", "*", "/"];
+
+  if (this.hasError) {
+    this.display.value = value;
+    this.hasError = false;
+    return;
+  }
+
+  // stop start with invalid operators
+  if (current === "" && operators.includes(value)) {
+    if (value !== "-") return;
+  }
+
+  // if last input char is operator then replace it
+  if (operators.includes(lastChar) && operators.includes(value)) {
+    this.display.value = current.slice(0, -1) + value;
+    return;
+  }
+
+  // stop multiple "."
+  if (value === ".") {
+    const parts = current.split(/[\+\-\*\/]/);
+    const lastNumber = parts[parts.length - 1];
+    if (lastNumber.includes(".")) return;
+  }
+
+  this.display.value += value;
+}
+
+Calculator.prototype.clear = function () {
+  this.display.value = "";
+  this.hasError = false;
+}
+
+Calculator.prototype.backspace = function () {
+  if (this.hasError) {
+    this.display.value = "";
+    this.hasError = false;
+    return;
+  }
+  this.display.value = this.display.value.slice(0, -1);
 }
