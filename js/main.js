@@ -1,15 +1,5 @@
 import { Calculator } from "./calculator.js";
 
-const themeSelector = document.getElementById('theme-selector');
-
-themeSelector.addEventListener('change', (e) => {
-  if (e.target.value === 'dark') {
-    document.body.classList.add('dark');
-  } else {
-    document.body.classList.remove('dark');
-  }
-});
-
 const themeBtn = document.getElementById("theme-button");
 const icon = themeBtn.querySelector("i");
 
@@ -28,7 +18,6 @@ const clearHistory = document.getElementById("clear-history");
 // toggle buttons
 historyBtn.addEventListener("click", () => {
   historyPanel.classList.toggle("show");
-  loadHistory();
 });
 
 closeHistory.addEventListener("click", () => {
@@ -37,28 +26,29 @@ closeHistory.addEventListener("click", () => {
 
 clearHistory.addEventListener("click", () => {
   localStorage.removeItem("calcHistory");
-  loadHistory();
+  calculator.history = [];
+  calculator.renderHistory();
 });
 
-function loadHistory() {
-  historyList.innerHTML = "";
-  const history = JSON.parse(localStorage.getItem("calcHistory")) || [];
+// function loadHistory() {
+//   historyList.innerHTML = "";
+//   const history = JSON.parse(localStorage.getItem("calcHistory")) || [];
 
-  history.forEach(item => {
-    const li = document.createElement("li");
-    li.textContent = item;
+//   history.forEach(item => {
+//     const li = document.createElement("li");
+//     li.textContent = item;
 
-    li.style.cursor = "pointer";
+//     li.style.cursor = "pointer";
 
-    li.addEventListener("click", () => {
-      const result = item.split("=").pop().trim();
-      document.querySelector(".display-input").value = result;
-      historyPanel.classList.toggle("show");
-    });
+//     li.addEventListener("click", () => {
+//       const result = item.split("=").pop().trim();
+//       document.querySelector(".display-input").value = result;
+//       historyPanel.classList.toggle("show");
+//     });
 
-    historyList.appendChild(li);
-  });
-}
+//     historyList.appendChild(li);
+//   });
+// }
 
 document
   .querySelector('select[name="calc-mode"]')

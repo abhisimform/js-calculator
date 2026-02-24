@@ -5,6 +5,57 @@ export class Calculator {
     this.display = displayElement;
     this.hasError = false;
     this.memory = 0;
+
+    this.history = [];
+    this.historyList = document.getElementById("history-list");
+
+    this.loadHistory();
+  }
+
+  history(calculation) {
+    let history = JSON.parse(localStorage.getItem("calcHistory")) || [];
+    history.push(calculation);
+    localStorage.setItem("calcHistory", JSON.stringify(history));
+  }
+
+  loadHistory() {
+    const stored = localStorage.getItem("calcHistory");
+    this.history = stored ? JSON.parse(stored) : [];
+    this.renderHistory();
+  }
+
+  addToHistory(entry) {
+    this.history.unshift(entry);
+
+    if (this.history.length > 20) {
+      this.history.pop();
+    }
+
+    this.saveHistory();
+    this.renderHistory();
+  }
+
+  saveHistory() {
+    localStorage.setItem("calcHistory", JSON.stringify(this.history));
+  }
+
+  renderHistory() {
+    this.historyList.innerHTML = "";
+
+    this.history.forEach(item => {
+      const li = document.createElement("li");
+      li.textContent = item;
+
+      li.style.cursor = "pointer";
+
+      li.addEventListener("click", () => {
+        const result = item.split("=").pop().trim();
+        this.display.value = result;
+        document.getElementById('history-panel').classList.toggle("show");
+      });
+
+      this.historyList.appendChild(li);
+    });
   }
 
   add(value) {
@@ -53,12 +104,6 @@ export class Calculator {
     this.display.value = this.display.value.slice(0, -1);
   }
 
-  history(calculation) {
-    let history = JSON.parse(localStorage.getItem("calcHistory")) || [];
-    history.push(calculation);
-    localStorage.setItem("calcHistory", JSON.stringify(history));
-  }
-
   calculate() {
     try {
       if (this.hasError) return;
@@ -87,7 +132,7 @@ export class Calculator {
         this.display.value = result;
       }
 
-      this.history(`${expression} = ${result}`);
+      this.addToHistory(`${expression} = ${result}`);
 
       this.display.value = result;
     } catch (err) {
