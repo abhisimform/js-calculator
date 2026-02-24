@@ -1,6 +1,10 @@
 import { safeEval } from "./utils.js";
 
 export class Calculator {
+  display;
+  hasError;
+  operators = ["+", "-", "*", "/"];
+
   constructor(displayElement) {
     this.display = displayElement;
     this.hasError = false;
@@ -57,10 +61,9 @@ export class Calculator {
       if (this.hasError) return;
 
       let expression = this.display.value;
-      console.log(expression)
       if (!expression) return;
 
-      if (["+", "-", "*", "/"].includes(expression.slice(-1))) {
+      if (this.operators.includes(expression.slice(-1))) {
         expression = expression.slice(0, -1);
       }
 
@@ -76,8 +79,7 @@ export class Calculator {
       if (Number.isNaN(result)) {
         this.hasError = true;
         this.display.value = "Error";
-      } else {
-        this.display.value = result;
+        return;
       }
 
       this.display.value = result;
