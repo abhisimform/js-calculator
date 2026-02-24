@@ -1,13 +1,27 @@
+export function safeEval(expression) {
+  try {
+    if (expression.includes("/0")) {
+      throw new Error("division by zero");
+    }
+
+    return eval(expression);
+
+  } catch (err) {
+    throw new Error("expression invalid ");
+  }
+}
+
+export function factorial(n) {
+  if (n < 0) throw new Error("negative factorial not allowed");
+  if (n === 0 || n === 1) return 1;
+  return n * factorial(n - 1);
+}
+
 import { safeEval } from "./utils.js";
 
 export class Calculator {
-  display;
-  hasError;
-  operators = ["+", "-", "*", "/"];
-
   constructor(displayElement) {
     this.display = displayElement;
-    this.hasError = false;
   }
 
   add(value) {
@@ -15,9 +29,8 @@ export class Calculator {
     const lastChar = current.slice(-1);
     const operators = ["+", "-", "*", "/"];
 
-    if (this.hasError) {
+    if (current === "Error") {
       this.display.value = value;
-      this.hasError = false;
       return;
     }
 
@@ -32,7 +45,7 @@ export class Calculator {
       return;
     }
 
-    // stop multiple "."
+    // stop multiple . 
     if (value === ".") {
       const parts = current.split(/[\+\-\*\/]/);
       const lastNumber = parts[parts.length - 1];
@@ -44,26 +57,26 @@ export class Calculator {
 
   clear() {
     this.display.value = "";
-    this.hasError = false;
   }
 
   backspace() {
-    if (this.hasError) {
+    if (this.display.value === "Error") {
       this.display.value = "";
-      this.hasError = false;
       return;
     }
+
     this.display.value = this.display.value.slice(0, -1);
   }
 
   calculate() {
     try {
-      if (this.hasError) return;
-
       let expression = this.display.value;
-      if (!expression) return;
 
-      if (this.operators.includes(expression.slice(-1))) {
+      console.log(expression)
+      if (!expression || expression === "Error") return;
+
+
+      if (["+", "-", "*", "/"].includes(expression.slice(-1))) {
         expression = expression.slice(0, -1);
       }
 
@@ -77,14 +90,13 @@ export class Calculator {
       const result = safeEval(expression);
 
       if (Number.isNaN(result)) {
-        this.hasError = true;
         this.display.value = "Error";
-        return;
+      } else {
+        this.display.value = result;
       }
 
       this.display.value = result;
     } catch (err) {
-      this.hasError = true;
       this.display.value = "Error";
       console.error(err.message);
     }
