@@ -10,6 +10,56 @@ themeSelector.addEventListener('change', (e) => {
   }
 });
 
+const themeBtn = document.getElementById("theme-button");
+const icon = themeBtn.querySelector("i");
+
+themeBtn.addEventListener("click", function () {
+  document.body.classList.toggle('dark');
+  icon.classList.toggle("fa-moon-o");
+  icon.classList.toggle("fa-sun-o");
+});
+
+const historyBtn = document.getElementById("history-button");
+const historyPanel = document.getElementById("history-panel");
+const closeHistory = document.getElementById("close-history");
+const historyList = document.getElementById("history-list");
+const clearHistory = document.getElementById("clear-history");
+
+// toggle buttons
+historyBtn.addEventListener("click", () => {
+  historyPanel.classList.toggle("show");
+  loadHistory();
+});
+
+closeHistory.addEventListener("click", () => {
+  historyPanel.classList.toggle("show");
+});
+
+clearHistory.addEventListener("click", () => {
+  localStorage.removeItem("calcHistory");
+  loadHistory();
+});
+
+function loadHistory() {
+  historyList.innerHTML = "";
+  const history = JSON.parse(localStorage.getItem("calcHistory")) || [];
+
+  history.forEach(item => {
+    const li = document.createElement("li");
+    li.textContent = item;
+
+    li.style.cursor = "pointer";
+
+    li.addEventListener("click", () => {
+      const result = item.split("=").pop().trim();
+      document.querySelector(".display-input").value = result;
+      historyPanel.classList.toggle("show");
+    });
+
+    historyList.appendChild(li);
+  });
+}
+
 document
   .querySelector('select[name="calc-mode"]')
   .addEventListener("change", function () {
@@ -29,19 +79,23 @@ document.querySelectorAll(".btn").forEach(btn => {
   btn.addEventListener("click", function () {
     const value = this.dataset.value;
 
-    switch (value) {
-      case "clear":
-        calculator.clear();
-        break;
-      case "backspace":
-        calculator.backspace();
-        break;
-      case "equals":
-        calculator.calculate();
-        break;
-      default:
-        calculator.add(value);
-        break;
+    if (["MC", "MR", "MS", "M+", "M-"].includes(value)) {
+      calculator.memory(value);
+    } else {
+      switch (value) {
+        case "clear":
+          calculator.clear();
+          break;
+        case "backspace":
+          calculator.backspace();
+          break;
+        case "equals":
+          calculator.calculate();
+          break;
+        default:
+          calculator.add(value);
+          break;
+      }
     }
   });
 });

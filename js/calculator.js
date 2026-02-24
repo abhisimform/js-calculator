@@ -4,6 +4,7 @@ export class Calculator {
   constructor(displayElement) {
     this.display = displayElement;
     this.hasError = false;
+    this.memory = 0;
   }
 
   add(value) {
@@ -52,6 +53,12 @@ export class Calculator {
     this.display.value = this.display.value.slice(0, -1);
   }
 
+  history(calculation) {
+    let history = JSON.parse(localStorage.getItem("calcHistory")) || [];
+    history.push(calculation);
+    localStorage.setItem("calcHistory", JSON.stringify(history));
+  }
+
   calculate() {
     try {
       if (this.hasError) return;
@@ -80,6 +87,8 @@ export class Calculator {
         this.display.value = result;
       }
 
+      this.history(`${expression} = ${result}`);
+
       this.display.value = result;
     } catch (err) {
       this.hasError = true;
@@ -87,4 +96,29 @@ export class Calculator {
       console.error(err.message);
     }
   }
+
+  memory(action) {
+    if (this.hasError) return;
+
+    const currentValue = parseFloat(this.display.value) || 0;
+
+    switch (action) {
+      case "MC":
+        this.memory = 0;
+        break;
+      case "MR":
+        this.display.value = this.memory;
+        break;
+      case "MS":
+        this.memory = currentValue;
+        break;
+      case "M+":
+        this.memory += currentValue;
+        break;
+      case "M-":
+        this.memory -= currentValue;
+        break;
+    }
+  }
+
 }

@@ -12,101 +12,126 @@
 
 <body class="">
 
-  <div class="calculator">
+  <div class="calculator_wrapper">
+    <div class="calculator">
 
-    <div class="calculator_display">
-      <input type="text" class="display-input" id="calc-input" autocomplete="off" readonly />
+      <div class="calculator_display">
+        <input type="text" class="display-input" id="calc-input" autocomplete="off" readonly />
+      </div>
+
+      <div class="calculator_mode">
+        <select name="calc-mode">
+          <option value="basic">Basic</option>
+          <option value="trigonometry">Trigonometry</option>
+        </select>
+
+        <select name="calc-function">
+          <option value="function">Function</option>
+        </select>
+
+        <select id="theme-selector">
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+        </select>
+      </div>
+
+      <div class="calculator_sidebar">
+        <button id="theme-button">
+          <i class="fa fa-moon-o"></i>
+        </button>
+
+        <button id="history-button">
+          <i class="fa fa-history"></i>
+        </button>
+      </div>
+
+      <div class="calculator_buttons">
+
+        <div class="buttons_row">
+          <button class="btn memory-btn" data-type="memory" data-value="MC">MC</button>
+          <button class="btn memory-btn" data-type="memory" data-value="MR">MR</button>
+          <button class="btn memory-btn" data-type="memory" data-value="M+">M+</button>
+          <button class="btn memory-btn" data-type="memory" data-value="M-">M-</button>
+          <button class="btn memory-btn" data-type="memory" data-value="MS">MS</button>
+        </div>
+
+        <div class="buttons_row advanced d-none">
+          <button class="btn function-btn" data-type="function" data-value="Math.cos(">cos</button>
+          <button class="btn function-btn" data-type="function" data-value="Math.sin(">sin</button>
+          <button class="btn function-btn" data-type="function" data-value="Math.tan(">tan</button>
+        </div>
+
+        <div class="buttons_row">
+          <button class="btn function-btn" data-type="function" data-value="2nd">2<sup>nd</sup></button>
+          <button class="btn constant-btn" data-type="constant" data-value="Math.PI">π</button>
+          <button class="btn constant-btn" data-type="constant" data-value="Math.e">e</button>
+          <button class="btn control-btn" data-type="control" data-value="clear">AC</button>
+          <button class="btn control-btn" data-type="control" data-value="backspace">⌫</button>
+        </div>
+
+        <div class="buttons_row">
+          <button class="btn function-btn" data-type="function" data-value="**2">x<sup>2</sup></button>
+          <button class="btn function-btn" data-type="function" data-value="reciprocal">1/x</button>
+          <button class="btn function-btn" data-type="function" data-value="Math.abs("> |x| </button>
+          <button class="btn function-btn" data-type="function" data-value="Math.exp(">exp</button>
+          <button class="btn function-btn" data-type="operator" data-value="%">mod</button>
+        </div>
+
+        <div class="buttons_row">
+          <button class="btn function-btn" data-type="function" data-value="Math.sqrt(">2&radic;x</button>
+          <button class="btn bracket-btn" data-type="bracket" data-value="(">(</button>
+          <button class="btn bracket-btn" data-type="bracket" data-value=")">)</button>
+          <button class="btn function-btn" data-type="function" data-value="factorial(">n!</button>
+          <button class="btn operator-btn" data-type="operator" data-value="/"> &divide; </button>
+        </div>
+
+        <div class="buttons_row">
+          <button class="btn function-btn" data-type="operator" data-value="**">x<sup>y</sup></button>
+          <button class="btn btn-white number-btn" data-type="number" data-value="7">7</button>
+          <button class="btn btn-white number-btn" data-type="number" data-value="8">8</button>
+          <button class="btn btn-white number-btn" data-type="number" data-value="9">9</button>
+          <button class="btn operator-btn" data-type="operator" data-value="*">&times;</button>
+        </div>
+
+        <div class="buttons_row">
+          <button class="btn function-btn" data-type="operator" data-value="10**">10<sup>x</sup></button>
+          <button class="btn btn-white number-btn" data-type="number" data-value="4">4</button>
+          <button class="btn btn-white number-btn" data-type="number" data-value="5">5</button>
+          <button class="btn btn-white number-btn" data-type="number" data-value="6">6</button>
+          <button class="btn operator-btn" data-type="operator" data-value="-">-</button>
+        </div>
+
+        <div class="buttons_row">
+          <button class="btn function-btn" data-type="function" data-value="Math.log10(">log</button>
+          <button class="btn btn-white number-btn" data-type="number" data-value="1">1</button>
+          <button class="btn btn-white number-btn" data-type="number" data-value="2">2</button>
+          <button class="btn btn-white number-btn" data-type="number" data-value="3">3</button>
+          <button class="btn operator-btn" data-type="operator" data-value="+">+</button>
+        </div>
+
+        <div class="buttons_row">
+          <button class="btn function-btn" data-type="function" data-value="Math.log(">ln</button>
+          <button class="btn function-btn" data-type="function" data-value="negate">+/-</button>
+          <button class="btn btn-white number-btn" data-type="number" data-value="0">0</button>
+          <button class="btn number-btn" data-type="number" data-value=".">.</button>
+          <button class="btn equal-btn" data-type="control" data-value="equals">=</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="history_panel" id="history-panel">
+    <div class="history_header">
+      <h3><i class="fa fa-history"></i> History</h3>
+      <button id="close-history"><i class="fa fa-times"></i></button>
     </div>
 
-    <div class="calculator_mode">
-      <select name="calc-mode">
-        <option value="basic">Basic</option>
-        <option value="trigonometry">Trigonometry</option>
-      </select>
+    <ul id="history-list"></ul>
 
-      <select name="calc-function">
-        <option value="function">Function</option>
-      </select>
-
-      <select id="theme-selector">
-        <option value="light">Light</option>
-        <option value="dark">Dark</option>
-      </select>
-    </div>
-
-    <div class="calculator_buttons">
-
-      <div class="buttons_row">
-        <button class="btn memory-btn" data-type="memory" data-value="MC">MC</button>
-        <button class="btn memory-btn" data-type="memory" data-value="MR">MR</button>
-        <button class="btn memory-btn" data-type="memory" data-value="M+">M+</button>
-        <button class="btn memory-btn" data-type="memory" data-value="M-">M-</button>
-        <button class="btn memory-btn" data-type="memory" data-value="MS">MS</button>
-      </div>
-
-      <div class="buttons_row advanced d-none">
-        <button class="btn function-btn" data-type="function" data-value="Math.cos(">cos</button>
-        <button class="btn function-btn" data-type="function" data-value="Math.sin(">sin</button>
-        <button class="btn function-btn" data-type="function" data-value="Math.tan(">tan</button>
-      </div>
-
-      <div class="buttons_row">
-        <button class="btn function-btn" data-type="function" data-value="2nd">2<sup>nd</sup></button>
-        <button class="btn constant-btn" data-type="constant" data-value="Math.PI">π</button>
-        <button class="btn constant-btn" data-type="constant" data-value="Math.e">e</button>
-        <button class="btn control-btn" data-type="control" data-value="clear">AC</button>
-        <button class="btn control-btn" data-type="control" data-value="backspace">⌫</button>
-      </div>
-
-      <div class="buttons_row">
-        <button class="btn function-btn" data-type="function" data-value="**2">x<sup>2</sup></button>
-        <button class="btn function-btn" data-type="function" data-value="reciprocal">1/x</button>
-        <button class="btn function-btn" data-type="function" data-value="Math.abs("> |x| </button>
-        <button class="btn function-btn" data-type="function" data-value="Math.exp(">exp</button>
-        <button class="btn function-btn" data-type="operator" data-value="%">mod</button>
-      </div>
-
-      <div class="buttons_row">
-        <button class="btn function-btn" data-type="function" data-value="Math.sqrt(">2&radic;x</button>
-        <button class="btn bracket-btn" data-type="bracket" data-value="(">(</button>
-        <button class="btn bracket-btn" data-type="bracket" data-value=")">)</button>
-        <button class="btn function-btn" data-type="function" data-value="factorial(">n!</button>
-        <button class="btn operator-btn" data-type="operator" data-value="/"> &divide; </button>
-      </div>
-
-      <div class="buttons_row">
-        <button class="btn function-btn" data-type="operator" data-value="**">x<sup>y</sup></button>
-        <button class="btn btn-white number-btn" data-type="number" data-value="7">7</button>
-        <button class="btn btn-white number-btn" data-type="number" data-value="8">8</button>
-        <button class="btn btn-white number-btn" data-type="number" data-value="9">9</button>
-        <button class="btn operator-btn" data-type="operator" data-value="*">&times;</button>
-      </div>
-
-      <div class="buttons_row">
-        <button class="btn function-btn" data-type="operator" data-value="10**">10<sup>x</sup></button>
-        <button class="btn btn-white number-btn" data-type="number" data-value="4">4</button>
-        <button class="btn btn-white number-btn" data-type="number" data-value="5">5</button>
-        <button class="btn btn-white number-btn" data-type="number" data-value="6">6</button>
-        <button class="btn operator-btn" data-type="operator" data-value="-">-</button>
-      </div>
-
-      <div class="buttons_row">
-        <button class="btn function-btn" data-type="function" data-value="Math.log10(">log</button>
-        <button class="btn btn-white number-btn" data-type="number" data-value="1">1</button>
-        <button class="btn btn-white number-btn" data-type="number" data-value="2">2</button>
-        <button class="btn btn-white number-btn" data-type="number" data-value="3">3</button>
-        <button class="btn operator-btn" data-type="operator" data-value="+">+</button>
-      </div>
-
-      <div class="buttons_row">
-        <button class="btn function-btn" data-type="function" data-value="Math.log(">ln</button>
-        <button class="btn function-btn" data-type="function" data-value="negate">+/-</button>
-        <button class="btn btn-white number-btn" data-type="number" data-value="0">0</button>
-        <button class="btn number-btn" data-type="number" data-value=".">.</button>
-        <button class="btn equal-btn" data-type="control" data-value="equals">=</button>
-      </div>
-
-    </div>
+    <button id="clear-history">
+      <i class="fa fa-trash"></i> Clear History
+    </button>
   </div>
 
   <script type="module" src="./js/main.js"></script>
