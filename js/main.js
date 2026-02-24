@@ -1,5 +1,12 @@
 import { Calculator } from "./calculator.js";
 
+const input = document.getElementById("calc-input");
+const calculator = new Calculator(input);
+
+// if use array then include take O(n) time to check
+const MEMORY_KEYS = new Set(["MC", "MR", "MS", "M+", "M-"]);
+const OPERATORS = new Set(["+", "-", "*", "/", "(", ")", "."]);
+
 const themeBtn = document.getElementById("theme-button");
 const icon = themeBtn.querySelector("i");
 
@@ -12,7 +19,6 @@ themeBtn.addEventListener("click", function () {
 const historyBtn = document.getElementById("history-button");
 const historyPanel = document.getElementById("history-panel");
 const closeHistory = document.getElementById("close-history");
-const historyList = document.getElementById("history-list");
 const clearHistory = document.getElementById("clear-history");
 
 // toggle buttons
@@ -29,100 +35,62 @@ clearHistory.addEventListener("click", () => {
   calculator.renderHistory();
 });
 
-// function loadHistory() {
-//   historyList.innerHTML = "";
-//   const history = JSON.parse(localStorage.getItem("calcHistory")) || [];
+const advancedSection = document.querySelector(".advanced");
 
-//   history.forEach(item => {
-//     const li = document.createElement("li");
-//     li.textContent = item;
-
-//     li.style.cursor = "pointer";
-
-//     li.addEventListener("click", () => {
-//       const result = item.split("=").pop().trim();
-//       document.querySelector(".display-input").value = result;
-//       historyPanel.classList.toggle("show");
-//     });
-
-//     historyList.appendChild(li);
-//   });
-// }
-
-document
-  .querySelector('select[name="calc-mode"]')
-  .addEventListener("change", function () {
-    const advanced = document.querySelector(".advanced");
-
-    if (this.value === "trigonometry") {
-      advanced.classList.remove("d-none");
-    } else {
-      advanced.classList.add("d-none");
-    }
+document.querySelector('select[name="calc-mode"]')
+  ?.addEventListener("change", function () {
+    advancedSection?.classList.toggle(
+      "d-none",
+      this.value !== "trigonometry"
+    );
   });
-
-const input = document.getElementById("calc-input");
-const calculator = new Calculator(input);
 
 document.querySelectorAll(".btn").forEach(btn => {
   btn.addEventListener("click", function () {
     const value = this.dataset.value;
 
-    if (["MC", "MR", "MS", "M+", "M-"].includes(value)) {
+    if (MEMORY_KEYS.has(value)) {
       calculator.memory(value);
-    } else {
-      switch (value) {
-        case "clear":
-          calculator.clear();
-          break;
-        case "backspace":
-          calculator.backspace();
-          break;
-        case "equals":
-          calculator.calculate();
-          break;
-        default:
-          calculator.add(value);
-          break;
-      }
+      return;
+    }
+
+    switch (value) {
+      case "clear":
+        calculator.clear();
+        break;
+      case "backspace":
+        calculator.backspace();
+        break;
+      case "equals":
+        calculator.calculate();
+        break;
+      default:
+        calculator.add(value);
+        break;
     }
   });
 });
 
-document.addEventListener("keydown", handleKeyboard);
-
-function handleKeyboard(e) {
+document.addEventListener("keydown", (e) => {
   const key = e.key;
 
-  if (!isNaN(key)) {
-    calculator.add(key);
-    return;
-  }
+  if (/^\d$/.test(key))
+    return calculator.add(key);
 
-  const operators = ["+", "-", "*", "/", "(", ")", "."];
-  if (operators.includes(key)) {
-    calculator.add(key);
-    return;
-  }
+  if (OPERATORS.has(key))
+    return calculator.add(key);
 
-  if (key === "^") {
-    calculator.add("**");
-    return;
-  }
+  if (key === "^")
+    return calculator.add("**");
 
   if (key === "Enter") {
     e.preventDefault();
-    calculator.calculate();
-    return;
+    return calculator.calculate();
   }
 
-  if (key === "Backspace") {
-    calculator.backspace();
-    return;
-  }
+  if (key === "Backspace")
+    return calculator.backspace();
 
-  if (key === "Escape" || key === "Delete") {
-    calculator.clear();
-    return;
-  }
-}
+  if (key === "Escape" || key === "Delete")
+    return calculator.clear();
+});

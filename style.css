@@ -61,6 +61,8 @@ body {
 .calculator_display {
   padding: 10px;
   background: var(--display-bg);
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
 }
 
 .display-input {
@@ -73,6 +75,9 @@ body {
   padding: 0 10px;
   outline: none;
   color: var(--text-color);
+  overflow-x: auto;
+  white-space: nowrap;
+  cursor: text;  
 }
 
 .calculator_mode {
@@ -87,7 +92,7 @@ body {
   padding: 6px 8px;
   border: 1px solid #ccc;
   background: white;
-  border-radius: 3px;
+  border-radius: 6px;
 }
 
 .calculator_buttons {
@@ -108,7 +113,7 @@ body {
   font-size: 1.3rem;
   cursor: pointer;
   border: 1px solid rgb(0, 0, 0, 0.1);
-  border-radius: 2px;
+  border-radius: 6px;
   color: var(--text-color);
   background: var(--btn1-bg);
 }
@@ -155,7 +160,7 @@ body {
   border: 1px solid var(--border-color);
   background: var(--btn1-bg);
   color: var(--text-color);
-  border-radius: 4px;
+  border-radius: 6px;
 }
 
 .calculator_sidebar button:hover {
@@ -213,7 +218,7 @@ body {
   border: none;
   background: #d9534f;
   color: white;
-  border-radius: 4px;
+  border-radius: 6px;
 }
 
 #close-history {

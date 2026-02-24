@@ -4,7 +4,11 @@ import historyClosure from "./historyClosure.js";
 export class Calculator {
   display;
   hasError;
-  operators = ["+", "-", "*", "/"];
+  memory;
+  historyC;
+  historyList;
+
+  OPERATORS = new Set(["+", "-", "*", "/", "(", ")", "."]);
 
   constructor(displayElement) {
     this.display = displayElement;
@@ -12,13 +16,8 @@ export class Calculator {
     this.memory = 0;
 
     this.historyC = historyClosure();
-    console.log(this.historyC);
     this.historyList = document.getElementById("history-list");
 
-    this.loadHistory();
-  }
-
-  loadHistory() {
     this.renderHistory();
   }
 
@@ -54,7 +53,7 @@ export class Calculator {
       let expression = this.display.value;
       if (!expression) return;
 
-      if (this.operators.includes(expression.slice(-1))) {
+      if (this.OPERATORS.has(expression.slice(-1))) {
         expression = expression.slice(0, -1);
       }
 
@@ -112,13 +111,11 @@ export class Calculator {
         break;
     }
   }
-
 }
 
 Calculator.prototype.add = function (value) {
   const current = this.display.value;
   const lastChar = current.slice(-1);
-  const operators = ["+", "-", "*", "/"];
 
   if (this.hasError) {
     this.display.value = value;
@@ -127,12 +124,12 @@ Calculator.prototype.add = function (value) {
   }
 
   // stop start with invalid operators
-  if (current === "" && operators.includes(value)) {
+  if (current === "" && this.OPERATORS.has(value)) {
     if (value !== "-") return;
   }
 
   // if last input char is operator then replace it
-  if (operators.includes(lastChar) && operators.includes(value)) {
+  if (this.OPERATORS.has(lastChar) && this.OPERATORS.has(value)) {
     this.display.value = current.slice(0, -1) + value;
     return;
   }
@@ -145,6 +142,8 @@ Calculator.prototype.add = function (value) {
   }
 
   this.display.value += value;
+
+  this.display.scrollLeft = this.display.scrollWidth;
 }
 
 Calculator.prototype.clear = function () {
