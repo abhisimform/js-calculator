@@ -8,7 +8,7 @@ export class Calculator {
   historyC;
   historyList;
 
-  OPERATORS = new Set(["+", "-", "*", "/", "(", ")", "."]);
+  static OPERATORS = new Set(["+", "-", "*", "/", "(", ")", "."]);
 
   constructor(displayElement) {
     this.display = displayElement;
@@ -53,7 +53,7 @@ export class Calculator {
       let expression = this.display.value;
       if (!expression) return;
 
-      if (this.OPERATORS.has(expression.slice(-1))) {
+      if (Calculator.OPERATORS.has(expression.slice(-1))) {
         expression = expression.slice(0, -1);
       }
 
@@ -124,12 +124,12 @@ Calculator.prototype.add = function (value) {
   }
 
   // stop start with invalid operators
-  if (current === "" && this.OPERATORS.has(value)) {
+  if (current === "" && Calculator.OPERATORS.has(value)) {
     if (value !== "-") return;
   }
 
   // if last input char is operator then replace it
-  if (this.OPERATORS.has(lastChar) && this.OPERATORS.has(value)) {
+  if (Calculator.OPERATORS.has(lastChar) && Calculator.OPERATORS.has(value)) {
     this.display.value = current.slice(0, -1) + value;
     return;
   }
