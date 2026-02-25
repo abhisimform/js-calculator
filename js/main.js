@@ -1,33 +1,58 @@
 import { Calculator } from "./calculator.js";
 
-const themeSelector = document.getElementById('theme-selector');
-
-themeSelector.addEventListener('change', (e) => {
-  if (e.target.value === 'dark') {
-    document.body.classList.add('dark');
-  } else {
-    document.body.classList.remove('dark');
-  }
-});
-
-document
-  .querySelector('select[name="calc-mode"]')
-  .addEventListener("change", function () {
-    const advanced = document.querySelector(".advanced");
-
-    if (this.value === "trigonometry") {
-      advanced.classList.remove("d-none");
-    } else {
-      advanced.classList.add("d-none");
-    }
-  });
-
 const input = document.getElementById("calc-input");
 const calculator = new Calculator(input);
+
+// if use array then include take O(n) time to check
+const MEMORY_KEYS = new Set(["MC", "MR", "MS", "M+", "M-"]);
+const OPERATORS = new Set(["+", "-", "*", "/", "(", ")", "."]);
+
+const themeBtn = document.getElementById("theme-button");
+const icon = themeBtn.querySelector("i");
+
+themeBtn.addEventListener("click", function () {
+  document.body.classList.toggle('dark');
+  icon.classList.toggle("fa-moon-o");
+  icon.classList.toggle("fa-sun-o");
+});
+
+const historyBtn = document.getElementById("history-button");
+const historyPanel = document.getElementById("history-panel");
+const closeHistory = document.getElementById("close-history");
+const clearHistory = document.getElementById("clear-history");
+
+// toggle buttons
+historyBtn.addEventListener("click", () => {
+  historyPanel.classList.toggle("show");
+});
+
+closeHistory.addEventListener("click", () => {
+  historyPanel.classList.toggle("show");
+});
+
+clearHistory.addEventListener("click", () => {
+  localStorage.removeItem("calcHistory");
+  calculator.renderHistory();
+});
+
+const advancedSection = document.querySelector(".advanced");
+
+document.querySelector('select[name="calc-mode"]')
+  ?.addEventListener("change", function () {
+    advancedSection?.classList.toggle(
+      "d-none",
+      this.value !== "trigonometry"
+    );
+  });
 
 document.querySelectorAll(".btn").forEach(btn => {
   btn.addEventListener("click", function () {
     const value = this.dataset.value;
+
+    if (MEMORY_KEYS.has(value)) {
+      calculator.memory(value);
+      return;
+    }
 
     switch (value) {
       case "clear":
@@ -46,40 +71,26 @@ document.querySelectorAll(".btn").forEach(btn => {
   });
 });
 
-document.addEventListener("keydown", handleKeyboard);
-
-function handleKeyboard(e) {
+document.addEventListener("keydown", (e) => {
   const key = e.key;
 
-  if (!isNaN(key)) {
-    calculator.add(key);
-    return;
-  }
+  if (/^\d$/.test(key))
+    return calculator.add(key);
 
-  const operators = ["+", "-", "*", "/", "(", ")", "."];
-  if (operators.includes(key)) {
-    calculator.add(key);
-    return;
-  }
+  if (OPERATORS.has(key))
+    return calculator.add(key);
 
-  if (key === "^") {
-    calculator.add("**");
-    return;
-  }
+  if (key === "^")
+    return calculator.add("**");
 
   if (key === "Enter") {
     e.preventDefault();
-    calculator.calculate();
-    return;
+    return calculator.calculate();
   }
 
-  if (key === "Backspace") {
-    calculator.backspace();
-    return;
-  }
+  if (key === "Backspace")
+    return calculator.backspace();
 
-  if (key === "Escape" || key === "Delete") {
-    calculator.clear();
-    return;
-  }
-}
+  if (key === "Escape" || key === "Delete")
+    return calculator.clear();
+});
